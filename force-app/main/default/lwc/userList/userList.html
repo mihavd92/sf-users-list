@@ -1,0 +1,63 @@
+<template>
+    <lightning-card title="Список користувачів" icon-name="standard:user">
+        <lightning-input
+            label="Пошук за іменем або прізвищем"
+            value={searchKey}
+            onchange={handleSearchKeyChange}
+            placeholder="Введіть ім'я або прізвище">
+        </lightning-input>
+        
+        <template if:true={paginatedUsers}>
+            <ul>
+                <template for:each={paginatedUsers} for:item="user">
+                    <li key={user.Id} class="user-item">
+                        <span class={user.statusClass}></span>
+                        <p><strong>{user.Name}</strong> - {user.Email}</p>
+                        <p class="status-text">Status: {user.statusText}</p>
+                        <lightning-button
+                            class="button-with-margin"  
+                            variant="neutral"
+                            label={user.buttonLabel}
+                            data-id={user.Id}
+                            data-isactive={user.IsActive}
+                            onclick={handleButtonClick}>
+                        </lightning-button>
+                    </li>
+                </template>
+            </ul>
+
+            <div class="pagination-controls">
+                <lightning-button-icon
+                    icon-name="utility:chevronleft"
+                    alternative-text="Попередня сторінка"
+                    onclick={handlePreviousPage}
+                    disabled={isPreviousDisabled}>
+                </lightning-button-icon>
+                
+                <span>Сторінка {currentPage} з {totalPages}</span>
+                
+                <lightning-button-icon
+                    icon-name="utility:chevronright"
+                    alternative-text="Наступна сторінка"
+                    onclick={handleNextPage}
+                    disabled={isNextDisabled}>
+                </lightning-button-icon>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <p>{error}</p>
+        </template>
+
+        <div class="records-per-page">
+            <label for="perPage">Користувачів на сторінку:</label>
+            <lightning-combobox
+                name="perPage"
+                value={recordsPerPage}
+                placeholder="Кількість записів"
+                options={perPageOptions}
+                onchange={handleRecordsPerPageChange}>
+            </lightning-combobox>
+        </div>
+    </lightning-card>
+</template>
